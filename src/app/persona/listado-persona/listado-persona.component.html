@@ -1,0 +1,54 @@
+<div class="container">
+  <table class="table">
+    <thead>
+      <tr>
+        <th scope="col">#</th>
+        <th scope="col">Nombre</th>
+        <th scope="col">Edad</th>
+        <th scope="col">Fecha</th>
+        <th scope="col">Direccion</th>
+        <th scope="col">Rol</th>
+        <th scope="col">Acciones</th>
+      </tr>
+    </thead>
+    <tbody>
+      <!-- <tr *ngFor="let p of $listado | async"> -->
+      <tr *ngFor="let p of listado"> 
+        <th scope="row">{{p.id}}</th>
+        <td>{{p.nombre}}</td>
+        <td>{{ p.edad }} - {{ p.edad | esMayor:16 }}</td>
+        <td>{{ fecha | date:'dd/MM/yyyy' }}</td>
+        <td>{{p.rol?.nombre | uppercase}}</td>
+        <td>{{p.direccion?.provincia?.nombre}} - {{p.direccion.ciudad?.nombre}}</td>
+        <td>
+          <button type="button" class="btn btn-warning" (click)="editar(p.id)">Editar</button>
+          <app-baja-persona [id]="p.id"></app-baja-persona>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+
+  <p [ngClass]="{
+    'rojo': listado.length === 0,
+    'verde': listado.length > 0
+  }">
+    Cantidad de Resultados: {{ listado.length }}
+  </p>
+
+  <p appCambiarColor>
+    Cambiando Colores
+  </p>
+
+  <app-proyeccion-contenido>
+    <select style="display: block;">
+      <option value="">Hola</option>
+      <option value="">Chau</option>
+    </select>
+    <input segundaSeccion type="text" name="" id="" value="Segunda Seccion" style="display: block;">
+  </app-proyeccion-contenido>
+</div>
+
+
+<p>
+  {{$valorObservable | async}}
+</p>

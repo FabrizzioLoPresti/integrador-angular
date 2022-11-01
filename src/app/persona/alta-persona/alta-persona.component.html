@@ -1,0 +1,55 @@
+<div class="container">
+  <form [formGroup]="formulario">
+    <div class="mb-3">
+      <label for="nombre" class="form-label">Nombre</label>
+      <input type="email" class="form-control" id="nombre" formControlName="nombre">
+      <div id="emailHelp" class="form-text">Minimo 3 caracteres.</div>
+    </div>
+    <div class="mb-3" formGroupName="direccion">
+      <label for="calle" class="form-label">Calle</label>
+      <input type="text" class="form-control" id="calle" formControlName="calle">
+
+      <label for="nro" class="form-label">Nro</label>
+      <input type="number" class="form-control" id="nro" formControlName="nro">
+      
+      <label for="provincia" class="form-label">Provincia</label>
+      <select class="form-select" name="provincia" id="provincia" formControlName="idProvincia">
+        <option [selected]="true" [disabled]="true" value="">--SELECCIONE--</option>
+        <option [ngValue]="p.id" *ngFor="let p of $provincias | async">{{ p.nombre }}</option>
+      </select>
+
+      <label for="ciudad" class="form-label">Ciudad</label>
+      <select class="form-select" name="ciudad" id="ciudad" formControlName="idCiudad">
+        <option [selected]="true" [disabled]="true" value="">--SELECCIONE--</option>
+        <option [ngValue]="c.id" *ngFor="let c of $ciudades | async">{{ c.nombre }}</option>
+      </select>
+    </div>
+    <div class="mb-3 form-check">
+      <input type="checkbox" class="form-check-input" id="tieneRol" formControlName="tieneRol">
+      <label class="form-check-label" for="tieneRol">Tiene Rol?</label>
+    </div>
+    <div class="mb-3 form-check" *ngIf="mostrarRol">
+      <label for="rol" class="form-label">Rol</label>
+      <select class="form-select" name="rol" id="rol" formControlName="idRol">
+        <option [selected]="true" [disabled]="true" value="">--SELECCIONE--</option>
+        <option [ngValue]="r.id" *ngFor="let r of $roles | async">{{r.nombre}}</option>
+      </select>
+      <span *ngIf="formulario.get('idRol')?.touched && formulario.get('idRol')?.hasError('usuarioInvalido')">
+        * Usuario no valido
+      </span>
+    </div>
+    <button type="submit" class="btn btn-danger" (click)="cancelar()">Cancelar</button>
+    <button type="submit" class="btn btn-primary" (click)="enviar()">Enviar</button>
+  </form>
+
+  <p>
+    <span>Nombre:</span> {{ formulario.value.nombre }}
+  </p>
+  <p>
+    <span>Direccion:</span> {{ formulario.value.direccion.calle }}
+    <span>Nro:</span> {{ formulario.value.direccion.nro }}
+  </p>
+  <p *ngIf="formulario.touched && formulario.invalid">
+    El formulario es invalido
+  </p>
+</div>
