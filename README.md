@@ -34,9 +34,9 @@ To get more help on the Angular CLI use `ng help` or go check out the [Angular C
 5. Crear carpeta /services y crear un servicio con `ng g s /services/nombre-servicio` (personas) y agregarlo en el App Modules
 6. Crear carpeta /models y crear una interfaz con `ng g interface /models/nombre-interfaz` (Persona) y agregarla en el App Modules
 7. Crear Listado y cargar datos desde el servicio
-- 1) Copiar tabla de Bootstrap y pegar en el HTML del componente
-- 2) Crear /services/persona.service.ts y /services/rol.service.ts
-- 3) Crear /models/persona.ts y /models/rol.ts como Modelos
+>1) Copiar tabla de Bootstrap y pegar en el HTML del componente
+>2) Crear /services/persona.service.ts y /services/rol.service.ts
+>3) Crear /models/persona.ts y /models/rol.ts como Modelos
 > persona.ts
 ```typescript
 import { Rol } from './Rol'
@@ -65,7 +65,7 @@ export interface Rol {
     nombre: string;
 }
 ```
-- 4) Dentro de personaService.ts y rolService.ts consultar API y devolver los datos en forma de Observable
+>4) Dentro de personaService.ts y rolService.ts consultar API y devolver los datos en forma de Observable
 ```typescript
 import { HttpClient } from '@angular/common/http'; // 1) Importar HttpClient
 import { Observable } from 'rxjs'; // 2) Importar Observable
@@ -79,7 +79,7 @@ export class PersonaService {
   }
 }
 ```
-- 5) Llamar al servicio desde el Componente y cargar los datos en la tabla usando | async en el *ngFor
+>5) Llamar al servicio desde el Componente y cargar los datos en la tabla usando | async en el *ngFor
 ```typescript
 import { Component, OnInit } from '@angular/core'; // 1) Importar Component y OnInit
 import { Observable, Subscription } from 'rxjs'; // 2) Importar Observable
@@ -97,13 +97,13 @@ export class ListadoComponent implements OnInit {
     this.$personas = this.personaService.getPersonas(); // 7) Llamar al método getPersonas del servicio y cargar el resultado en la variable $personas
   }
 ```
-- - 1) Importar Models, Services, Router, Observable, Subscription y ngOnDestroy para .unsubscribe() en el ngOnDestroy() y evitar memory leaks
-- - 2) En Contructor del componente.ts definir private personaService:PersonaService, private router:Router, y demas servicios
-- - 3) Crear las variables de $listado, $oles de tipo Observable, y dentro del constructor inicialzar como this.$listado = new Observable<Persona[]>()
-- - 4) Crear el método ngOnInit() y dentro de este llamar al método del servicio que devuelve un Observable y cargar el resultado en la variable $listado
-- - 5) En ngOnInit() subscribirse al Observable y cargar el resultado en la variable listado mediante this.$listado = this.personaService.getPersonas() y en el subscribe cargar el resultado en la variable listado
-- - 6) En ngOnDestroy() desubscribirse del Observable mediante this.$listado.unsubscribe() para evitar memory leaks
-- - 7) Si no se da el caso de poder usar $listado, crear variable listado = [] y llenarle mediante Subscription.add() creando una variable private subscription: Subscription y dentro del constructor this.subscription = new Subscription(); y luego en el ngOnInit() this.subscription.add() donde llamemos al método del servicio que devuelve un Observable y cargar el resultado en la variable listado
+-  1) Importar Models, Services, Router, Observable, Subscription y ngOnDestroy para .unsubscribe() en el ngOnDestroy() y evitar memory leaks
+-  2) En Contructor del componente.ts definir private personaService:PersonaService, private router:Router, y demas servicios
+- 3) Crear las variables de $listado, $oles de tipo Observable, y dentro del constructor inicialzar como this.$listado = new Observable<Persona[]>()
+- 4) Crear el método ngOnInit() y dentro de este llamar al método del servicio que devuelve un Observable y cargar el resultado en la variable $listado
+- 5) En ngOnInit() subscribirse al Observable y cargar el resultado en la variable listado mediante this.$listado = this.personaService.getPersonas() y en el subscribe cargar el resultado en la variable listado
+- 6) En ngOnDestroy() desubscribirse del Observable mediante this.$listado.unsubscribe() para evitar memory leaks
+- 7) Si no se da el caso de poder usar $listado, crear variable listado = [] y llenarle mediante Subscription.add() creando una variable private subscription: Subscription y dentro del constructor this.subscription = new Subscription(); y luego en el ngOnInit() this.subscription.add() donde llamemos al método del servicio que devuelve un Observable y cargar el resultado en la variable listado
 > listado.component.ts
 ```typescript
 this.subscription.add(
@@ -131,26 +131,27 @@ this.subscription.add(
   })
 )
 ```
-- - 8) En el HTML del componente usar *ngFor para recorrer la variable listado y mostrar los datos en la tabla; si tuvieramos $listado seria `*ngFor="let persona of $listado | async"` y si tuvieramos listado seria `*ngFor="let persona of listado"`.
-- 6) Crear en Servicios services/ estado-persona para Comunicación entre Componentes
-- - 1) Importar HttpClient, Observable y Subject de rxjs
-- - 2) En Constructor: private http: HttpClient
-- - 3) Crear variable private estadoSubject: Subject<string> e inicializar en constructor this.estadoSubject = new Subject<string>();
-- - 4) Crear Funcion de Cambiar Estado:
+- 8) En el HTML del componente usar *ngFor para recorrer la variable listado y mostrar los datos en la tabla; si tuvieramos $listado seria `*ngFor="let persona of $listado | async"` y si tuvieramos listado seria `*ngFor="let persona of listado"`.
+
+>6) Crear en Servicios services/ estado-persona para Comunicación entre Componentes
+- 1) Importar HttpClient, Observable y Subject de rxjs
+- 2) En Constructor: private http: HttpClient
+- 3) Crear variable private estadoSubject: Subject<string> e inicializar en constructor this.estadoSubject = new Subject<string>();
+- 4) Crear Funcion de Cambiar Estado:
 > estado-persona.service.ts
 ```typescript
 cambiarEstado(estado:string) {
   this.estadoSubject.next(estado);
 }
 ```
-- - 5) Crear Funcion de Estado Cambio:
+- 5) Crear Funcion de Estado Cambio:
 > estado-persona.service.ts
 ```typescript
 estadoCambio(): Observable<string> {
   return this.estadoSubject.asObservable();
 }
 ```
-- - 6) Ejemplo de Utilizacion en Baja Persona:
+- 6) Ejemplo de Utilizacion en Baja Persona:
 En ListadoPersonas mando al Componente BajaPersona el ID para eliminar: `<app-baja-persona [id]="p.id"></app-baja-persona>`.
 
 En Componente BajaPersona HTML un Boton que llame la funcion de eliminar(): `<button (click)="eliminar()">Eliminar</button>`.
@@ -187,12 +188,13 @@ this.$valorObservable.subscribe({
 })
 ```
 
-- 7) Alta de Persona
-- - 1) En Componente HTML creo el Formulario con los campos necesarios
-- - 2) En Componente Alta.ts importar `{FormGroup, FormBuilder, Validators} from '@angular/forms';`
-- - 3) Crear variable de formulario: `formulario!: FormGroup;`
-- - 4) En Constructor: `constructor( private formBuilder:FormBuilder, private provinciaService:ProvinciaService, private ciudadService:CiudadService, private rolService:RolService, private personaService:PersonaService, private router:Router )`
-- - 5) En ngOnInit() crear el formulario con los campos necesarios y sus validaciones:
+>
+    7) Alta de Persona
+- 1) En Componente HTML creo el Formulario con los campos necesarios
+- 2) En Componente Alta.ts importar `{FormGroup, FormBuilder, Validators} from '@angular/forms';`
+- 3) Crear variable de formulario: `formulario!: FormGroup;`
+- 4) En Constructor: `constructor( private formBuilder:FormBuilder, private provinciaService:ProvinciaService, private ciudadService:CiudadService, private rolService:RolService, private personaService:PersonaService, private router:Router )`
+- 5) En ngOnInit() crear el formulario con los campos necesarios y sus validaciones:
 > alta-persona.component.ts
 ```typescript
 this.$provincias = this.provinciaService.obtener();
@@ -233,7 +235,7 @@ this.formulario.controls['direccion'].get('idProvincia')?.valueChanges.subscribe
   this.$ciudades = this.ciudadService.obtener(valor);
 })
 ```
-- - 6) Para acceder a los valores del Formulario:
+- 6) Para acceder a los valores del Formulario:
 > alta-persona.component.ts
 ```typescript
 this.formulario.controls['nombre'].value
@@ -254,7 +256,7 @@ this.formulario.controls['direccion'].get('idProvincia')?.valueChanges.subscribe
 })
 ```
 
-- - 7) Tomar - bindear datos del Formulario con los del HTML:
+- 7) Tomar - bindear datos del Formulario con los del HTML:
 > alta-persona.component.html
 ```html
 <form [formGroup]="formulario">
@@ -287,7 +289,7 @@ this.formulario.controls['direccion'].get('idProvincia')?.valueChanges.subscribe
   <button type="submit" class="btn btn-primary" (click)="alta()">Alta</button>
 </form>
 ```
-- - 8) Enviar datos del Formulario al Servicio:
+- 8) Enviar datos del Formulario al Servicio:
 > alta-persona.component.ts
 ```typescript
 enviar(): void {
@@ -312,7 +314,7 @@ enviar(): void {
 }
 ```
 
-- - 9) Validar un campo del Formulario:
+- 9) Validar un campo del Formulario:
 > alta-persona.component.ts
 ```typescript
 this.formulario = this.formBuilder.group({
@@ -347,10 +349,11 @@ Y dentro del HTML:
 </span>
 ```
 
-- 8) Editar una Persona:
-- - 1) Formulario igual al de Alta
-- - 2) De '@angular/route' obtener Router, ActivatedRoute
-- - 3) En ngOnInit() obtener el id de la Persona a editar mediante Subscription a ActivatedRoute.params para tomar (params) y de alli el ID para obtener dentro de ese Subscribe de next: (params) las $provincias, $roles, subscripcion al personaService para obtenerById(id) y dentro del next: (resPersona: Persona) asignar a this.persona = resPersona; para llenar formulario posteriormente en una funcion de cargarDatos() y consultar $ciudades teniendo el idProvincia.
+>
+    8) Editar una Persona:
+- 1) Formulario igual al de Alta
+- 2) De '@angular/route' obtener Router, ActivatedRoute
+- 3) En ngOnInit() obtener el id de la Persona a editar mediante Subscription a ActivatedRoute.params para tomar (params) y de alli el ID para obtener dentro de ese Subscribe de next: (params) las $provincias, $roles, subscripcion al personaService para obtenerById(id) y dentro del next: (resPersona: Persona) asignar a this.persona = resPersona; para llenar formulario posteriormente en una funcion de cargarDatos() y consultar $ciudades teniendo el idProvincia.
 > editar-persona.component.ts
 ```typescript
 constructor(private formBuilder:FormBuilder, private personaService:PersonaService, private rolService:RolService, private provinciaService:ProvinciaService, private ciudadService:CiudadService, private router:Router, private activatedRoute:ActivatedRoute) { 
@@ -413,7 +416,7 @@ cargarDatos(): void {
   })
 }
 ```
-- - 4) Enviar datos del Formulario al Servicio: igual que en Alta, verificando campos validos
+- 4) Enviar datos del Formulario al Servicio: igual que en Alta, verificando campos validos
 > editar-persona.component.ts
 ```typescript
 enviar(): void {
@@ -442,13 +445,14 @@ cancelar(): void {
 }
 ```
 
-- - 5) Para pasar el ID podemos usar el estado-persona.service para comunicacion entre componentes u obtener el ID del parametro de la URL mediante ActivatedRoutes creando como constante una id: string donde vamos a guardar el params['id'] y luego agregar al objeto persona el ID con this.persona.id = this.id
+- 5) Para pasar el ID podemos usar el estado-persona.service para comunicacion entre componentes u obtener el ID del parametro de la URL mediante ActivatedRoutes creando como constante una id: string donde vamos a guardar el params['id'] y luego agregar al objeto persona el ID con this.persona.id = this.id
 
-- 9) Pipes - Pipes Personalizadas:
-- - 1) Crear Pipe Personalizado: ng g pipe pipes/esMayor
-- - 2) Crear funcion transform(): string
-- - 3) Importar Pipe en el modulo donde se va a usar
-- - 4) Usar Pipe en el HTML -> `<td>{{p.descuento | esMayor:16}}</td>`
+>
+    9) Pipes - Pipes Personalizadas:
+- 1) Crear Pipe Personalizado: ng g pipe pipes/esMayor
+- 2) Crear funcion transform(): string
+- 3) Importar Pipe en el modulo donde se va a usar
+- 4) Usar Pipe en el HTML -> `<td>{{p.descuento | esMayor:16}}</td>`
 > es-mayor.pipe.ts
 ```typescript
 import { Pipe, PipeTransform } from "@angular/core";
@@ -463,10 +467,11 @@ export class EsMayorPipe implements PipeTransform {
   }
 }
 ```
-- - 5) Usar pipes ya existentes como: | date:'dd/MM/yyyy' | uppercase | lowercase | currency:'ARS' | percent | number:'1.2-2' | json
+- 5) Usar pipes ya existentes como: | date:'dd/MM/yyyy' | uppercase | lowercase | currency:'ARS' | percent | number:'1.2-2' | json
 
-- 10) Directivas - Directivas Personalizadas:
-- - 1) Directiva `[ngClass]`:
+>
+    10) Directivas - Directivas Personalizadas:
+- 1) Directiva `[ngClass]`:
 > persona.component.html
 ```html
 <p [ngClass]="{
@@ -474,14 +479,14 @@ export class EsMayorPipe implements PipeTransform {
   'verde': ($listado | async)?.length
 }">Cantidad de resultados: {{ ($listado | async)?.length }}</p>
 ```
-- - 2) Directiva `[ngStyle]`:
+- 2) Directiva `[ngStyle]`:
 > persona.component.html
 ```html
 <p [ngStyle]="{
   color: ($listado | async)?.length == 0 ? 'red' : 'green'
 }">Cantidad de resultados: {{ ($listado | async)?.length }}</p>
 ```
-- - 3) Directiva `[ngSwitch]`:
+- 3) Directiva `[ngSwitch]`:
 > persona.component.html
 ```html
 <div [ngSwitch]="'rojo'">
@@ -489,21 +494,21 @@ export class EsMayorPipe implements PipeTransform {
   <div *ngSwitchCase="'verde'">VERDE</div>
 </div>
 ```
-- - 4) Directiva `[ngFor]`:
+- 4) Directiva `[ngFor]`:
 > persona.component.html
 ```html
 <div *ngFor="let p of $listado | async ">
   <p>{{p.nombre}}</p>
 </div>
 ```
-- - 5) Directiva `[ngIf]`:
+- 5) Directiva `[ngIf]`:
 > persona.component.html
 ```html
 <div *ngIf="($listado | async)?.length == 0">
   <p>No hay resultados</p>
 </div>
 ```
-- - 6) Directiva `[ngIf]` con else:
+- 6) Directiva `[ngIf]` con else:
 > persona.component.html
 ```html
 <div *ngIf="($listado | async)?.length == 0; else elseBlock">
@@ -513,7 +518,7 @@ export class EsMayorPipe implements PipeTransform {
   <p>Hay resultados</p>
 </ng-template>
 ```
-- - 7) Directivas Personalizadas: ng g directive directives/cambiarColor
+- 7) Directivas Personalizadas: ng g directive directives/cambiarColor
 > cambiar-color.directive.ts
 ```typescript
 import { Directive, ElementRef, HostListener, OnInit } from "@angular/core";
@@ -541,7 +546,8 @@ export class CambiarColorDirective {
 <p cambiarColor>Texto con directiva personalizada</p>
 ```
 
-- 11) Proyeccion de Contenido: ng g component components/selectInyeccion
+>
+    11) Proyeccion de Contenido: ng g component components/selectInyeccion
 > select-inyeccion.component.html
 ```html
 <p>HEADER</p>
