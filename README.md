@@ -26,6 +26,40 @@ Run `ng e2e` to execute the end-to-end tests via a platform of your choice. To u
 
 To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI Overview and Command Reference](https://angular.io/cli) page.
 
+# Simplificado
+1. Borrar HTML del index.html
+2. Importar modulos (2) necesarios en el App Modules
+3. Crear componentes
+4. Establecer las routes
+5. Instalar Bootstrap y crear un Navbar en el App.html referenciando los links con routerLink
+6. Tabla de Bootstrap para Listado
+7. Crear Modelos - Interfaces
+8. Crear Servicios y llamados a la API importando Observer, HttpClient en el Constructor
+9. En Componente de listado consultar la API de forma multiple con subscription, no con Pipe | Async
+10. En Listado HTML recorrer con *ngFor el resultado de la consulta a la API y colocar el rol?.nombre en el caso de que pueda llegar a ser undefined
+11. Crear Componente de Baja, en HTML con button que llame (click)="eliminar()"
+12. Enviar al Componente de Baja [id]="p.id" desde el Listado HTML y recibirlo en el TS del Componente de Baja como @Input()
+13. Crear Service de estadoPersona para comunicacion de componentes
+14. Cambio estado desde Componente de baja al eliminar() y escucho por el cambio desde Listado mediante un Observable de $valorObservable
+15. Escuchar en el Listado por cambio de Observable $valorObservable = this.estadoPersona... o mediante un Subscribe al $valorObservable para poder lanzar alerta con el valor del estadoCambiado y re cargar el Listado
+16. En Alta HTML crear Formulario, seccion de Mostrar Rol y Direccion que contiene calle, nro, provincia, ciudad
+17. En Alta Componente.ts importar FormGroup, FormBuilder (Constructor) y Validators, Router y Observable
+18. Construir los Campos del Formulario en una variable Formulario, cargar los Selects haciendo llamada a $listado con | async
+19. Asociar el Formulario HTML con los cammpos de la Variable formulario en el TS, con [formGroup] para el Formulario, formControlName para los campos y para las secciones formGroupName
+20. Validar Formulario en tiempo real y al llamar la funcion de enviar(), utilizar el valueChanges.subscribe((valor) =>... para detectar cambios y mostrar secciones, o para llamar la API de ciudades si cambio el idProvincia
+21. Desde el HTML validar el formulario mostrando alertas y carteles usando: formulario.touched && formulario.invalid dentro de un *ngIF, el Validator creado a mano (importarlo en el Componente TS para poder utilizarlo) y los valores ingresados mediante: formulario.get('idRol').touched && formulario.get('idRol').hasError('usuarioInvalido')
+22. Acceder a datos del Formulario mediante: 
+    - formulario.get('idRol')
+    - formulario.controls['direccion'].get('idProvincia')
+    - formulario.value.nombre
+23. Crear funcion de enviar() donde validos que se cumplan los Validators del Formulario, en caso afirmativo enviamos el formulario mediante un subscription, luego de que se registro la transaccion redireccionamos al listado
+24. Crear un Formulario para editar
+25. En Componente TS de editar importar todos los modulos anteriores sumado ActivatedRoutes para poder tomar el id de la URL y definirlo en el Constructor
+26. Cargar los datos consultados a la API dentro del Formulario en una funcion de cargarDatos() la cual crea la variable de formulario y carga lo obtenido de la API, la consulta de los datos se hace en el ngOnInit mediante un subscription el cual se destruye en el ngOnDestroy. Dentro del ngOnInit que se ejecuta cada vez que se crea el Componente luego de consultar la API, cargar los datos en el Formulario mediante la Funcion de cargarDatos() llamo a la funcion de cargar $ciudades para luego poder cambiar de Provincia y que se me carguen sus respectivas Ciudades
+27. Utilizar para distintos Formatos las Pipes existentes - Crear Pipe personalizada e Importar en App Module
+28. Usar directivas como [ngClass] - Crear directivas personalizadas e Importarlas en el App Module
+29. Utilizar proyeccion de Contenido - Podria re-utilizarse el Formulario de Alta y Edicion
+
 # Paso a Paso
 1. Importar en App Modules -> HttpClientModule y ReactiveFormsModule
 2. Crear cuatro componentes en /persona con `ng g c /persona/nombre-componente` (listado, alta, editar, baja)
