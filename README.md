@@ -52,13 +52,19 @@ To get more help on the Angular CLI use `ng help` or go check out the [Angular C
     - formulario.get('idRol')
     - formulario.controls['direccion'].get('idProvincia')
     - formulario.value.nombre
-23. Crear funcion de enviar() donde validos que se cumplan los Validators del Formulario, en caso afirmativo enviamos el formulario mediante un subscription, luego de que se registro la transaccion redireccionamos al listado
-24. Crear un Formulario para editar
-25. En Componente TS de editar importar todos los modulos anteriores sumado ActivatedRoutes para poder tomar el id de la URL y definirlo en el Constructor
-26. Cargar los datos consultados a la API dentro del Formulario en una funcion de cargarDatos() la cual crea la variable de formulario y carga lo obtenido de la API, la consulta de los datos se hace en el ngOnInit mediante un subscription el cual se destruye en el ngOnDestroy. Dentro del ngOnInit que se ejecuta cada vez que se crea el Componente luego de consultar la API, cargar los datos en el Formulario mediante la Funcion de cargarDatos() llamo a la funcion de cargar $ciudades para luego poder cambiar de Provincia y que se me carguen sus respectivas Ciudades
-27. Utilizar para distintos Formatos las Pipes existentes - Crear Pipe personalizada e Importar en App Module
-28. Usar directivas como [ngClass] - Crear directivas personalizadas e Importarlas en el App Module
-29. Utilizar proyeccion de Contenido - Podria re-utilizarse el Formulario de Alta y Edicion
+23. Control y muestra de Errores dentro del Formulario HTML
+    - Direccion: {{formulario.value.direccion.calle}}
+    - *ngIf="formulario.touched && formulario.invalid"
+    - *ngIf="formulario.get('nombre')?.touched && formulario.get('nombre')?.hasError('required')"
+    - *ngIf="formulario.get('idRol')?.touched && formulario.get('idRol')?.hasError('usuarioInvalido')"
+24. Agregado de Validator Propio y Async, mostrando errores de la misma manera
+25. Crear funcion de enviar() donde validos que se cumplan los Validators del Formulario, en caso afirmativo enviamos el formulario mediante un subscription, luego de que se registro la transaccion redireccionamos al listado
+26. Crear un Formulario para editar
+27. En Componente TS de editar importar todos los modulos anteriores sumado ActivatedRoutes para poder tomar el id de la URL y definirlo en el Constructor
+28. Cargar los datos consultados a la API dentro del Formulario en una funcion de cargarDatos() la cual crea la variable de formulario y carga lo obtenido de la API, la consulta de los datos se hace en el ngOnInit mediante un subscription el cual se destruye en el ngOnDestroy. Dentro del ngOnInit que se ejecuta cada vez que se crea el Componente luego de consultar la API, cargar los datos en el Formulario mediante la Funcion de cargarDatos() llamo a la funcion de cargar $ciudades para luego poder cambiar de Provincia y que se me carguen sus respectivas Ciudades
+29. Utilizar para distintos Formatos las Pipes existentes - Crear Pipe personalizada e Importar en App Module
+30. Usar directivas como [ngClass] - Crear directivas personalizadas e Importarlas en el App Module
+31. Utilizar proyeccion de Contenido - Podria re-utilizarse el Formulario de Alta y Edicion
 
 # Paso a Paso
 1. Importar en App Modules -> HttpClientModule y ReactiveFormsModule
