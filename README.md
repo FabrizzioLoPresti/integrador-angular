@@ -58,6 +58,11 @@ To get more help on the Angular CLI use `ng help` or go check out the [Angular C
     - *ngIf="formulario.get('nombre')?.touched && formulario.get('nombre')?.hasError('required')"
     - *ngIf="formulario.get('idRol')?.touched && formulario.get('idRol')?.hasError('usuarioInvalido')"
 24. Agregado de Validator Propio y Async, mostrando errores de la misma manera
+    - Crear propio Validator normal -> ValidarRolUsuario
+    - Para crear el Async Validator:
+    - Agregar en PersonaService una consulta que devuelva un Observable<boolean> y busque el nombre existente.
+    - Crear clase de PersonaValidator con una Funcion Static que se encargue de hacer la validacion contra la API
+    - Agregar el Validator en la seccion de Validadores Asincronos del campo correspondiente
 25. Crear funcion de enviar() donde validos que se cumplan los Validators del Formulario, en caso afirmativo enviamos el formulario mediante un subscription, luego de que se registro la transaccion redireccionamos al listado
 26. Crear un Formulario para editar
 27. En Componente TS de editar importar todos los modulos anteriores sumado ActivatedRoutes para poder tomar el id de la URL y definirlo en el Constructor
@@ -388,6 +393,59 @@ Y dentro del HTML:
   * Usuario no valido
 </span>
 ```
+  
+ Podemos crear ASYNC VALIDATOR:
+ 
+ Dentro del Service buscamos un Nombre que coincida:
+ > persona.service.ts
+ ```ts
+  checkIfNameExists(value:string): Observable<boolean> {
+    return this.http.get<Persona[]>(`${this.urlAPI}?nombre=${value}`).pipe(
+      map((res:Persona[]) => {
+        return res.length > 0;
+      }
+    ));
+  }
+ ```
+ 
+ Lleva la logica del Validator a importar en el Formulario:
+ > PersonaValidator.ts
+ ```ts
+  import { AsyncValidatorFn, AbstractControl, ValidationErrors } from '@angular/forms';
+  import { Observable, map } from 'rxjs';
+  import { PersonaService } from '../services/persona.service';
+
+  export class PersonaValidator {
+    static nombreValidator(personaService:PersonaService): AsyncValidatorFn {
+      return (control: AbstractControl): Observable<ValidationErrors | null> => {
+        return personaService
+          .checkIfNameExists(control.value)
+          .pipe(
+            map((result: boolean) => {
+              return result ? {nameAlreadyExists: result} : null;
+            })
+          )
+      }
+    }
+  }
+ ```
+  
+ Finalmente agregamos el Validator en el Formulario:
+ > alta-persona.component.ts
+ ```ts
+  this.formulario = this.formBuilder.group({
+      nombre: ['', [
+        Validators.required,
+        Validators.minLength(3),
+      ], [
+        PersonaValidator.nombreValidator(this.personaService)
+      ]],
+      edad: [0, [
+        Validators.required,
+        Validators.min(0),
+        Validators.max(120)
+      ]]
+ ```
 
 >
     8) Editar una Persona:
