@@ -406,6 +406,12 @@ Y dentro del HTML:
       }
     ));
   }
+  
+  checkIfNameExists(value:string): Observable<boolean> {
+    return this.http.get<Persona[]>(`${this.urlAPI}?nombre=${value}`).pipe(
+      map(z => z.some((a) => a.nombre === value))
+    );
+  }
  ```
  
  Lleva la logica del Validator a importar en el Formulario:
